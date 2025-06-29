@@ -1,8 +1,7 @@
 {
-  "engines":{
-    "node":"23.9.0"
-  
-},
+  "engines": {
+    "node": "23.9.0"
+  },
   "name": "transport",
   "version": "1.0.0",
   "main": "index.js",
@@ -23,6 +22,7 @@
     "express-session": "^1.18.1",
     "moment": "^2.30.1",
     "mongoose": "^8.16.1",
+    "multer": "^2.0.1",
     "pdfkit": "^0.17.1",
     "puppeteer": "^24.11.1"
   }
