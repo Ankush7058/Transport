@@ -29,18 +29,18 @@
   </div>
 
   <!-- Party -->
-  <div class="col-md-6">
-    <label>Party</label>
-    <select name="party" id="partySelect" class="form-select" onchange="fillPartyDetails()" required>
-      <option value="">-- Select Party --</option>
-      <% parties.forEach(p => { %>
-        <option value="<%= p._id %>" data-contact="<%= p.contact %>" data-gst="<%= p.gst %>" data-address="<%= p.address %>"
-          <%= booking?.party == p._id ? 'selected' : '' %>>
-          <%= p.name %>
-        </option>
-      <% }) %>
-    </select>
-  </div>
+<!-- PARTY (Name shown, ID stored) -->
+<div class="col-md-6">
+  <label>Party</label>
+  <input list="partyList" id="partyInput" class="form-control" placeholder="Start typing party name..." required>
+  <input type="hidden" name="party" id="partyId">
+  <datalist id="partyList">
+    <% parties.forEach(p => { %>
+      <option data-id="<%= p._id %>" data-contact="<%= p.contact %>" data-gst="<%= p.gst %>" data-address="<%= p.address %>" value="<%= p.name %>"></option>
+    <% }) %>
+  </datalist>
+</div>
+
 
   <!-- Contact Details -->
   <div class="col-md-4">
@@ -57,17 +57,17 @@
   </div>
 
   <!-- Vehicle -->
-  <div class="col-md-6">
-    <label>Vehicle</label>
-    <select name="vehicle" class="form-select" required>
-      <option value="">-- Select Vehicle --</option>
-      <% vehicles.forEach(v => { %>
-        <option value="<%= v._id %>" <%= booking?.vehicle == v._id ? 'selected' : '' %>>
-          <%= v.number %> - <%= v.type %>
-        </option>
-      <% }) %>
-    </select>
-  </div>
+<!-- VEHICLE (Number shown, ID stored) -->
+<div class="col-md-6">
+  <label>Vehicle</label>
+  <input list="vehicleList" id="vehicleInput" class="form-control" placeholder="Start typing vehicle number..." required>
+  <input type="hidden" name="vehicle" id="vehicleId">
+  <datalist id="vehicleList">
+    <% vehicles.forEach(v => { %>
+      <option data-id="<%= v._id %>" value="<%= v.number %> - <%= v.type %>"></option>
+    <% }) %>
+  </datalist>
+</div>
 
   <!-- Other Booking Details -->
   <div class="col-md-3">
@@ -75,29 +75,26 @@
     <input name="consignmentNo" class="form-control" value="<%= booking?.consignmentNo || '' %>">
   </div>
 
-  <div class="col-md-6">
-    <label>From Destination</label>
-    <select name="from" class="form-select" required>
-      <option value="">-- Select From --</option>
-      <% destinations.forEach(d => { %>
-        <option value="<%= d.destinationName %>" <%= booking?.from == d.destinationName ? 'selected' : '' %>>
-          <%= d.destinationName %> - <%= d.destinationCode %>
-        </option>
-      <% }) %>
-    </select>
-  </div>
+<div class="col-md-6">
+  <label>From Destination</label>
+  <input name="from" list="fromList" class="form-control" value="<%= booking?.from || '' %>" placeholder="From" required>
+  <datalist id="fromList">
+    <% destinations.forEach(d => { %>
+      <option value="<%= d.destinationName %>"><%= d.destinationCode %></option>
+    <% }) %>
+  </datalist>
+</div>
 
-  <div class="col-md-6">
-    <label>To Destination</label>
-    <select name="to" class="form-select" required>
-      <option value="">-- Select To --</option>
-      <% destinations.forEach(d => { %>
-        <option value="<%= d.destinationName %>" <%= booking?.to == d.destinationName ? 'selected' : '' %>>
-          <%= d.destinationName %> - <%= d.destinationCode %>
-        </option>
-      <% }) %>
-    </select>
-  </div>
+<!-- To Destination -->
+<div class="col-md-6">
+  <label>To Destination</label>
+  <input name="to" list="toList" class="form-control" value="<%= booking?.to || '' %>" placeholder="To" required>
+  <datalist id="toList">
+    <% destinations.forEach(d => { %>
+      <option value="<%= d.destinationName %>"><%= d.destinationCode %></option>
+    <% }) %>
+  </datalist>
+</div>
 
   <!-- Charges -->
   <% const fields = [
@@ -122,16 +119,37 @@
     </div>
   </div>
 </div>
-
+<!-- Script to autofill party details -->
 <script>
-  function fillPartyDetails() {
-    const selected = document.getElementById("partySelect").selectedOptions[0];
-    if (!selected) return;
-    document.getElementById("contact").value = selected.dataset.contact || '';
-    document.getElementById("gst").value = selected.dataset.gst || '';
-    document.getElementById("address").value = selected.dataset.address || '';
+function setIdFromDatalist(inputId, hiddenId, listId) {
+  const input = document.getElementById(inputId);
+  const hidden = document.getElementById(hiddenId);
+  const options = document.getElementById(listId).options;
+
+  const match = Array.from(options).find(opt => opt.value === input.value);
+  if (match) {
+    hidden.value = match.dataset.id || '';
   }
+}
+
+// Call on blur
+document.getElementById('partyInput').addEventListener('blur', () => {
+  setIdFromDatalist('partyInput', 'partyId', 'partyList');
+
+  // Fill contact, gst, address
+  const match = [...partyList.options].find(opt => opt.value === partyInput.value);
+  if (match) {
+    document.getElementById('contact').value = match.dataset.contact || '';
+    document.getElementById('gst').value = match.dataset.gst || '';
+    document.getElementById('address').value = match.dataset.address || '';
+  }
+});
+
+document.getElementById('vehicleInput').addEventListener('blur', () => {
+  setIdFromDatalist('vehicleInput', 'vehicleId', 'vehicleList');
+});
 </script>
+
 <script>
   function printPDF() {
     const id = document.querySelector('input[name="bookingId"]')?.value;
@@ -142,9 +160,4 @@
     window.open(`/booking/print/${id}`, '_blank');
   }
 </script>
-<script>
-  setTimeout(() => {
-    const alertBox = document.querySelector('.alert-success');
-    if (alertBox) alertBox.style.display = 'none';
-  }, 3000);
-</script>
+
