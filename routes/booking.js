@@ -9,6 +9,10 @@ const moment = require('moment');
 const puppeteer = require('puppeteer');
 const path = require('path');
 const fs = require('fs');
+const downloadDir = path.join(__dirname, 'public/downloads');
+if (!fs.existsSync(downloadDir)) {
+  fs.mkdirSync(downloadDir, { recursive: true });
+}
 
 // Generate serial booking number
 async function generateBookingNumber() {
@@ -65,7 +69,11 @@ router.post('/add', ensureLogin, async (req, res) => {
         booking: await Booking.findById(newBooking._id).populate('party vehicle')
       });
 
-      const browser = await puppeteer.launch();
+  const browser = await puppeteer.launch({
+  headless: true,
+  args: ['--no-sandbox', '--disable-setuid-sandbox']
+});
+
       const page = await browser.newPage();
       await page.setContent(html, { waitUntil: 'domcontentloaded' });
 
