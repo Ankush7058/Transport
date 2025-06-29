@@ -1,0 +1,86 @@
+<div class="d-flex justify-content-center align-items-center" style="min-height: 90vh;">
+  <div class="card w-100 shadow-sm" style="max-width: 1000px;">
+    <div class="card-body">
+      <h4 class="px-3 py-1 mb-4" style="background: linear-gradient(to right, #5e2ced, #6e37ff); color: white; font-weight: bold;font-size: 1.2rem; border-radius: 4px;">
+        <%= typeof paymentType !== 'undefined' && paymentType ? 'Edit Payment Type' : 'Add Payment Type' %>
+      </h4>
+
+      <!-- Form -->
+   <!-- Form -->
+<form action="<%= paymentType ? '/master/payment-types/update/' + paymentType._id : '/master/payment-types' %>" method="POST" class="mb-4">
+  <div class="row g-3">
+    <div class="col-md-3">
+      <label for="accountName" class="form-label">Account Name</label>
+      <input type="text" id="accountName" name="accountName" class="form-control"
+             placeholder="Enter account name" required
+             value="<%= paymentType ? paymentType.accountName : '' %>">
+    </div>
+
+    <div class="col-md-3">
+      <label for="accountNumber" class="form-label">Account Number</label>
+      <input type="text" id="accountNumber" name="accountNumber" class="form-control"
+             placeholder="Enter account number" required
+             value="<%= paymentType ? paymentType.accountNumber : '' %>">
+    </div>
+
+    <div class="col-md-3">
+      <label for="ifscCode" class="form-label">IFSC Code</label>
+      <input type="text" id="ifscCode" name="ifscCode" class="form-control"
+             placeholder="Enter IFSC code" required
+             value="<%= paymentType ? paymentType.ifscCode : '' %>">
+    </div>
+
+    <div class="col-md-3">
+      <label for="remark" class="form-label">Remark</label>
+      <input type="text" id="remark" name="remark" class="form-control"
+             placeholder="Optional remark"
+             value="<%= paymentType ? paymentType.remark : '' %>">
+    </div>
+  </div>
+
+  <div class="row mt-3">
+    <div class="col-md-2 ms-auto">
+      <button type="submit" class="btn btn-<%= paymentType ? 'warning' : 'primary' %> w-100">
+        <%= paymentType ? 'Update' : 'Add' %>
+      </button>
+    </div>
+  </div>
+</form>
+
+
+      <!-- Table -->
+      <table class="table table-bordered">
+        <thead class="table-light">
+          <tr>
+            <th>#</th>
+            <th>Account Name</th>
+            <th>Account Number</th>
+            <th>IFSC Code</th>
+            <th>Remark</th>
+            <th style="width: 150px;">Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% if (paymentTypes.length === 0) { %>
+            <tr><td colspan="6" class="text-center">No payment types added yet.</td></tr>
+          <% } else { %>
+            <% paymentTypes.forEach((pt, index) => { %>
+              <tr>
+                <td><%= index + 1 %></td>
+                <td><%= pt.accountName %></td>
+                <td><%= pt.accountNumber %></td>
+                <td><%= pt.ifscCode %></td>
+                <td><%= pt.remark %></td>
+                <td class="d-flex gap-2">
+                  <a href="/master/payment-types/edit/<%= pt._id %>" class="btn btn-sm btn-info">Edit</a>
+                  <a href="/master/payment-types/delete/<%= pt._id %>" onclick="return confirm('Are you sure?')" class="btn btn-sm btn-danger">Delete</a>
+                </td>
+              </tr>
+            <% }) %>
+          <% } %>
+        </tbody>
+      </table>
+
+    </div>
+  </div>
+</div>

@@ -1,0 +1,82 @@
+<div class="d-flex justify-content-center align-items-center" style="min-height: 90vh;">
+  <div class="card w-100 shadow-sm" style="max-width: 900px;">
+    <div class="card-body">
+     <div class="px-3 py-1 mb-4" style="background: linear-gradient(to right, #5e2ced, #6e37ff); color: white; font-weight: bold;font-size: 1.2rem; border-radius: 4px;">
+  <%= 'Destination Master'%>
+</div>
+
+
+      <!-- Form -->
+<form action="<%= destination ? '/master/destinations/update/' + destination._id : '/master/destinations' %>" method="POST" class="mb-4">
+  <div class="row g-3">
+    <div class="col-md-5">
+      <label for="destinationName" class="form-label">Destination Name</label>
+      <input type="text" id="destinationName" name="destinationName" class="form-control"
+             placeholder="Enter destination name"
+             required value="<%= destination ? destination.destinationName : '' %>">
+    </div>
+    <div class="col-md-5">
+      <label for="destinationCode" class="form-label">Destination Code</label>
+      <input type="text" id="destinationCode" name="destinationCode" class="form-control"
+             placeholder="Enter destination code"
+             required value="<%= destination ? destination.destinationCode : '' %>">
+    </div>
+    <div class="col-md-2 d-flex align-items-end">
+      <button type="submit" class="btn btn-<%= destination ? 'warning' : 'primary' %> w-100">
+        <%= destination ? 'Update' : 'Add' %>
+      </button>
+    </div>
+  </div>
+</form>
+
+
+      <!-- Table -->
+      <table class="table table-bordered">
+        <thead class="table-light">
+          <tr>
+            <th style="width: 50px;">#</th>
+          <th>Name</th>
+<th>Code</th>
+
+            <th style="width: 140px;">Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% if (destinations.length === 0) { %>
+            <tr>
+              <td colspan="4" class="text-center">No destinations added yet.</td>
+            </tr>
+          <% } %>
+          <% destinations.forEach((d, index) => { %>
+            <tr>
+              <td><%= index + 1 %></td>
+            <td><%= d.destinationName %></td>
+<td><%= d.destinationCode %></td>
+           <td>
+  <div class="d-flex gap-2">
+    <a href="/master/destinations/edit/<%= d._id %>" class="btn btn-sm btn-info">Edit</a>
+    <a href="/master/destinations/delete/<%= d._id %>" onclick="return confirm('Are you sure?')" class="btn btn-sm btn-danger">Delete</a>
+  </div>
+</td>
+
+            </tr>
+          <% }) %>
+        </tbody>
+      </table>
+
+      <!-- Pagination -->
+      <% if (typeof totalPages !== 'undefined' && totalPages > 1) { %>
+        <nav>
+          <ul class="pagination justify-content-center">
+            <% for (let i = 1; i <= totalPages; i++) { %>
+              <li class="page-item <%= currentPage === i ? 'active' : '' %>">
+                <a class="page-link" href="/master/destinations?page=<%= i %>"><%= i %></a>
+              </li>
+            <% } %>
+          </ul>
+        </nav>
+      <% } %>
+
+    </div>
+  </div>
+</div>

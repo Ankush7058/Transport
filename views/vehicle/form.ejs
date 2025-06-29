@@ -1,0 +1,127 @@
+<div class="d-flex justify-content-center align-items-center" style="min-height: 90vh;">
+  <div class="card w-100 shadow-sm" style="max-width: 1100px;">
+    <div class="card-body">
+      <h4 class="px-3 py-1 mb-4" style="background: linear-gradient(to right, #5e2ced, #6e37ff); color: white; font-weight: bold;font-size: 1.2rem; border-radius: 4px;"><%= vehicle ? 'Edit Vehicle' : 'Add Vehicle' %></h4>
+
+      <form action="<%= vehicle ? '/vehicle/update/' + vehicle._id : '/vehicle/add' %>" method="POST" enctype="multipart/form-data" class="row g-3">
+        <div class="col-md-6">
+          <label for="number">Vehicle Number</label>
+          <input name="number" class="form-control" placeholder="Enter vehicle number" required value="<%= vehicle?.number || '' %>">
+        </div>
+        <div class="col-md-6">
+          <label for="owner">Owner Name</label>
+          <input name="owner" class="form-control" placeholder="Enter owner name" required value="<%= vehicle?.owner || '' %>">
+        </div>
+        <div class="col-md-6">
+          <label for="contact">Contact Number</label>
+          <input name="contact" class="form-control" placeholder="Enter contact number" required value="<%= vehicle?.contact || '' %>">
+        </div>
+        <div class="col-md-6">
+          <label for="address">Address</label>
+          <input name="address" class="form-control" placeholder="Enter address" required value="<%= vehicle?.address || '' %>">
+        </div>
+        <div class="col-md-6">
+          <label for="type">Vehicle Type</label>
+          <select name="type" class="form-select" required>
+            <option value="">Select type</option>
+            <option value="Owner Vehicle" <%= vehicle?.type === 'Owner Vehicle' ? 'selected' : '' %>>Owner Vehicle</option>
+            <option value="Vendor Vehicle" <%= vehicle?.type === 'Vendor Vehicle' ? 'selected' : '' %>>Vendor Vehicle</option>
+          </select>
+        </div>
+
+        <!-- Uploads -->
+        <div class="col-md-4">
+          <label>Insurance File</label>
+          <input type="file" name="insurance" class="form-control">
+          <% if (vehicle?.documents?.insurance) { %>
+            <a href="/uploads/<%= vehicle.documents.insurance %>" target="_blank" class="d-block mt-1 text-primary">View Current</a>
+          <% } %>
+        </div>
+        <div class="col-md-4">
+          <label>PUC File</label>
+          <input type="file" name="puc" class="form-control">
+          <% if (vehicle?.documents?.puc) { %>
+            <a href="/uploads/<%= vehicle.documents.puc %>" target="_blank" class="d-block mt-1 text-primary">View Current</a>
+          <% } %>
+        </div>
+        <div class="col-md-4">
+          <label>Health Card File</label>
+          <input type="file" name="healthCard" class="form-control">
+          <% if (vehicle?.documents?.healthCard) { %>
+            <a href="/uploads/<%= vehicle.documents.healthCard %>" target="_blank" class="d-block mt-1 text-primary">View Current</a>
+          <% } %>
+        </div>
+
+        <div class="text-end mt-4">
+          <button type="submit" class="btn btn-<%= vehicle ? 'warning' : 'primary' %>">
+            <%= vehicle ? 'Update Vehicle' : 'Add Vehicle' %>
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- 📦 Vehicle List Section -->
+<div class="d-flex justify-content-center align-items-center " style="min-height: 40vh;">
+  <div class="card w-100 shadow-sm" style="max-width: 1100px;">
+    <div class="card-body">
+      <h4 class="px-3 py-1 mb-4" style="background: linear-gradient(to right, #5e2ced, #6e37ff); color: white; font-weight: bold;font-size: 1.2rem; border-radius: 4px;">List of Vehicles</h4>
+
+      <table class="table table-bordered">
+        <thead class="table-light">
+          <tr>
+            <th>#</th>
+            <th>Number</th>
+            <th>Owner</th>
+            <th>Type</th>
+            <th>Documents</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% if (vehicles.length === 0) { %>
+            <tr><td colspan="6" class="text-center">No vehicles found.</td></tr>
+          <% } else { %>
+            <% vehicles.forEach((v, i) => { %>
+              <tr>
+                <td><%= i + 1 + ((currentPage - 1) * limit) %></td>
+                <td><%= v.number %></td>
+                <td><%= v.owner %></td>
+                <td><%= v.type %></td>
+                <td>
+                  <% if (v.documents.insurance) { %>
+                    <a href="/uploads/<%= v.documents.insurance %>" target="_blank" class="d-block text-primary">Insurance</a>
+                  <% } %>
+                  <% if (v.documents.puc) { %>
+                    <a href="/uploads/<%= v.documents.puc %>" target="_blank" class="d-block text-primary">PUC</a>
+                  <% } %>
+                  <% if (v.documents.healthCard) { %>
+                    <a href="/uploads/<%= v.documents.healthCard %>" target="_blank" class="d-block text-primary">Health</a>
+                  <% } %>
+                </td>
+                <td>
+                  <a href="/vehicle/edit/<%= v._id %>" class="btn btn-sm btn-info me-1">Edit</a>
+                  <a href="/vehicle/delete/<%= v._id %>" onclick="return confirm('Are you sure?')" class="btn btn-sm btn-danger">Delete</a>
+                </td>
+              </tr>
+            <% }) %>
+          <% } %>
+        </tbody>
+      </table>
+
+      <!-- Pagination -->
+      <% if (totalPages > 1) { %>
+        <nav class="mt-4">
+          <ul class="pagination justify-content-center">
+            <% for (let i = 1; i <= totalPages; i++) { %>
+              <li class="page-item <%= currentPage === i ? 'active' : '' %>">
+                <a class="page-link" href="/vehicle/list?page=<%= i %>"><%= i %></a>
+              </li>
+            <% } %>
+          </ul>
+        </nav>
+      <% } %>
+    </div>
+  </div>
+</div>

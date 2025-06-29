@@ -1,0 +1,141 @@
+<div class="sidebar" data-background-color="dark">
+  <div class="sidebar-logo">
+    <!-- Logo Header -->
+    <div class="logo-header" data-background-color="dark">
+      <a href="#" class="logo d-flex align-items-center">
+        <span class="text-white fw-semibold fs-5">🚚 Transport</span>
+      </a>
+
+      <div class="nav-toggle">
+        <button class="btn btn-toggle toggle-sidebar">
+          <i class="gg-menu-right"></i>
+        </button>
+        <button class="btn btn-toggle sidenav-toggler">
+          <i class="gg-menu-left"></i>
+        </button>
+      </div>
+
+      <button class="topbar-toggler more">
+        <i class="gg-more-vertical-alt"></i>
+      </button>
+    </div>
+    <!-- End Logo Header -->
+  </div>
+
+  <div class="sidebar-wrapper scrollbar scrollbar-inner">
+    <div class="sidebar-content">
+      <ul class="nav nav-secondary">
+        <li class="nav-item active">
+          <a href="/dashboard">
+            <i class="fas fa-home"></i>
+            <p>Dashboard</p>
+          </a>
+        </li>
+
+        <li class="nav-section">
+          <span class="sidebar-mini-icon">
+            <i class="fa fa-ellipsis-h"></i>
+          </span>
+          <h4 class="text-section">Components</h4>
+        </li>
+
+        <li class="nav-item">
+          <a data-bs-toggle="collapse" href="#base">
+            <i class="fas fa-layer-group"></i>
+            <p>Booking</p>
+            <span class="caret"></span>
+          </a>
+          <div class="collapse" id="base">
+            <ul class="nav nav-collapse">
+              <li><a href="/booking/add"><span class="sub-item">Create Booking</span></a></li>
+
+              <li><a href="/booking/list"><span class="sub-item">List Booking</span></a></li>
+            </ul>
+          </div>
+        </li>
+
+        <li class="nav-item">
+          <a data-bs-toggle="collapse" href="#sidebarLayouts">
+            <i class="fas fa-th-list"></i>
+            <p>Payment</p>
+            <span class="caret"></span>
+          </a>
+          <div class="collapse" id="sidebarLayouts">
+            <ul class="nav nav-collapse">
+              <li><a href="/payment/receive"><span class="sub-item">Receive Payment</span></a></li>
+              <li><a href="/payment/list"><span class="sub-item">List Received Payment</span></a></li>
+              <li><a href="/payment/owner"><span class="sub-item">Pay to Vehicle Owner</span></a></li>
+            </ul>
+          </div>
+        </li>
+
+        <li class="nav-item">
+          <a href="/alerts">
+            <i class="fas fa-pen-square"></i>
+            <p>Alerts</p>
+          </a>
+        </li>
+
+        <li class="nav-item">
+          <a data-bs-toggle="collapse" href="#tables">
+            <i class="fas fa-table"></i>
+            <p>Party Management</p>
+            <span class="caret"></span>
+          </a>
+          <div class="collapse" id="tables">
+            <ul class="nav nav-collapse">
+              <li><a href="/party/add"><span class="sub-item">Add Party</span></a></li>
+           
+            </ul>
+          </div>
+        </li>
+
+        <li class="nav-item">
+          <a data-bs-toggle="collapse" href="#tables1">
+            <i class="fas fa-table"></i>
+            <p>Vehicle Management</p>
+            <span class="caret"></span>
+          </a>
+          <div class="collapse" id="tables1">
+            <ul class="nav nav-collapse">
+              <li><a href="/vehicle/add"><span class="sub-item">Add Vehicle</span></a></li>
+             
+            </ul>
+          </div>
+        </li>
+
+        <li class="nav-item">
+          <a data-bs-toggle="collapse" href="#maps">
+            <i class="fas fa-map-marker-alt"></i>
+            <p>Report</p>
+            <span class="caret"></span>
+          </a>
+          <div class="collapse" id="maps">
+            <ul class="nav nav-collapse">
+              <li><a href="/report/ledger"><span class="sub-item">Ledger Report</span></a></li>
+              <li><a href="/report/party"><span class="sub-item">Party Report</span></a></li>
+              <li><a href="/report/bill-party"><span class="sub-item">Bill Party Report</span></a></li>
+            </ul>
+          </div>
+        </li>
+
+        <li class="nav-item">
+          <a data-bs-toggle="collapse" href="#charts">
+            <i class="far fa-chart-bar"></i>
+            <p>Master</p>
+            <span class="caret"></span>
+          </a>
+          <div class="collapse" id="charts">
+            <ul class="nav nav-collapse">
+<li><a href="/master/destinations"><span class="sub-item">Destination Master</span></a></li>
+
+
+              <li><a href="/master/payment-types"><span class="sub-item">Payment Type</span></a></li>
+             
+            </ul>
+          </div>
+        </li>
+      </ul>
+    </div>
+  </div>
+</div>

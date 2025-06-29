@@ -1,0 +1,77 @@
+<div class="p-3">
+
+<!-- Summary Cards -->
+<div class="row mt-5">
+  <div class="col-md-3">
+    <div class="card text-white bg-primary mb-3">
+      <div class="card-body">
+        <h5 class="card-title">Total Bookings</h5>
+        <p class="card-text fs-4">120</p>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-3">
+    <div class="card text-white bg-success mb-3">
+      <div class="card-body">
+        <h5 class="card-title">Total Payments</h5>
+        <p class="card-text fs-4">₹ 1,25,000</p>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-3">
+    <div class="card text-white bg-warning mb-3">
+      <div class="card-body">
+        <h5 class="card-title">Pending Rents</h5>
+        <p class="card-text fs-4">₹ 42,000</p>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-3">
+    <div class="card text-white bg-danger mb-3">
+      <div class="card-body">
+        <h5 class="card-title">Alerts</h5>
+        <p class="card-text fs-4">4</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Placeholder Chart Section -->
+<div class="row">
+  <div class="col-md-12">
+    <div class="card mt-4">
+      <div class="card-header">
+        Booking Activity (Graph)
+      </div>
+      <div class="card-body">
+        <canvas id="bookingChart" height="100"></canvas>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+<!-- Chart.js Script -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+  const ctx = document.getElementById('bookingChart').getContext('2d');
+  const bookingChart = new Chart(ctx, {
+    type: 'line',
+    data: {
+      labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+      datasets: [{
+        label: 'Bookings',
+        data: [12, 19, 10, 17, 14, 9, 15],
+        borderColor: '#007bff',
+        backgroundColor: 'rgba(0, 123, 255, 0.2)',
+        tension: 0.4,
+        fill: true
+      }]
+    },
+    options: {
+      responsive: true,
+      scales: {
+        y: { beginAtZero: true }
+      }
+    }
+  });
+</script>

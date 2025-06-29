@@ -1,0 +1,12 @@
+<div class="container mt-4">
+  <h4 class="mb-4">System Notifications</h4>
+  <ul class="list-group">
+    <% notifications.forEach(n => { %>
+      <li class="list-group-item">
+        <strong class="text-<%= n.type %>">[<%= n.type.toUpperCase() %>]</strong>
+        <%= n.message %>
+        <br><small class="text-muted"><%= n.createdAt.toLocaleString() %></small>
+      </li>
+    <% }) %>
+  </ul>
+</div>

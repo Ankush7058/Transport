@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Print Booking</title>
+  <style>
+    body { font-family: Arial; padding: 20px; }
+    h2 { text-align: center; }
+    table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+    th, td { padding: 10px; border: 1px solid #ccc; }
+  </style>
+</head>
+<body>
+  <h2>Booking Invoice</h2>
+
+  <table>
+    <tr><th>Booking No</th><td><%= booking.bookingNumber %></td></tr>
+    <tr><th>Date</th><td><%= booking.bookingDate.toLocaleDateString() %></td></tr>
+    <tr><th>Party</th><td><%= booking.party?.name %></td></tr>
+    <tr><th>Vehicle</th><td><%= booking.vehicle?.number %></td></tr>
+    <tr><th>From</th><td><%= booking.from %></td></tr>
+    <tr><th>To</th><td><%= booking.to %></td></tr>
+    <tr><th>Consignment No</th><td><%= booking.consignmentNo %></td></tr>
+    <tr><th>Rent for Party</th><td>₹<%= booking.rentForParty %></td></tr>
+    <tr><th>Rent for Owner</th><td>₹<%= booking.rentForOwner %></td></tr>
+    <tr><th>Advance</th><td>₹<%= booking.advance %></td></tr>
+    <tr><th>Pending</th><td>₹<%= booking.pending %></td></tr>
+  </table>
+
+  <p style="text-align: center; margin-top: 30px;">Thank you for your business!</p>
+</body>
+</html>

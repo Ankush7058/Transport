@@ -1,0 +1,114 @@
+<div class="d-flex justify-content-center align-items-center mt-5" style="min-height: 60vh;">
+  <div class="card w-100 shadow-sm" style="max-width: 1100px;">
+    <div class="card-body">
+      <h4 class="px-3 py-1 mb-4" style="background: linear-gradient(to right, #5e2ced, #6e37ff); color: white; font-weight: bold;font-size: 1.2rem; border-radius: 4px;"><%= party ? 'Edit Party' : 'Add Party' %></h4>
+
+      <!-- Add/Edit Form -->
+      <form action="<%= party ? '/party/update/' + party._id : '/party/add' %>" method="POST">
+        <div class="row g-3">
+          <div class="col-md-4">
+            <label for="name" class="form-label">Party Name</label>
+            <input id="name" name="name" class="form-control" required placeholder="Enter party name" value="<%= party?.name || '' %>">
+          </div>
+          <div class="col-md-4">
+            <label for="contact" class="form-label">Contact Number</label>
+            <input id="contact" name="contact" class="form-control" required placeholder="Enter contact number" value="<%= party?.contact || '' %>">
+          </div>
+          <div class="col-md-4">
+            <label for="email" class="form-label">Email</label>
+            <input id="email" name="email" class="form-control" placeholder="Enter email (optional)" value="<%= party?.email || '' %>">
+          </div>
+          <div class="col-md-6">
+            <label for="address" class="form-label">Address</label>
+            <input id="address" name="address" class="form-control" placeholder="Enter address" value="<%= party?.address || '' %>">
+          </div>
+          <div class="col-md-3">
+            <label for="city" class="form-label">City</label>
+            <input id="city" name="city" class="form-control" placeholder="Enter city" value="<%= party?.city || '' %>">
+          </div>
+          <div class="col-md-3">
+            <label for="gst" class="form-label">GST No.</label>
+            <input id="gst" name="gst" class="form-control" placeholder="Enter GST number" value="<%= party?.gst || '' %>">
+          </div>
+        </div>
+
+        <div class="text-end mt-3">
+          <button type="submit" class="btn btn-<%= party ? 'warning' : 'primary' %>">
+            <%= party ? 'Update' : 'Add' %>
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- 🔳 Party List Section in its Own Card -->
+<div class="d-flex justify-content-center align-items-center " style="min-height: 90vh;">
+  <div class="card w-100 shadow-sm" style="max-width: 1100px;">
+    <div class="card-body">
+      <h4 class="px-3 py-1 mb-4" style="background: linear-gradient(to right, #5e2ced, #6e37ff); color: white; font-weight: bold;font-size: 1.2rem; border-radius: 4px;">List of Parties</h4>
+
+      <!-- Filter + Search -->
+      <form class="row g-2 mb-3" method="GET">
+        <div class="col-md-4">
+          <label for="search" class="form-label">Search </label>
+          <input type="text" id="search" name="search" class="form-control" placeholder="Enter name or contact" value="<%= search || '' %>">
+        </div>
+        <div class="col-md-2 d-flex align-items-end">
+          <button type="submit" class="btn btn-secondary w-100">Search</button>
+        </div>
+       
+      </form>
+
+      <!-- Table -->
+      <table class="table table-bordered">
+        <thead class="table-light">
+          <tr>
+            <th>#</th>
+            <th>Name</th>
+            <th>Contact</th>
+            <th>Email</th>
+            <th>City</th>
+            <th>GST</th>
+            <th style="width: 130px;">Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% if (parties.length === 0) { %>
+            <tr>
+              <td colspan="7" class="text-center">No records found.</td>
+            </tr>
+          <% } else { %>
+            <% parties.forEach((p, index) => { %>
+              <tr>
+                <td><%= (currentPage - 1) * limit + index + 1 %></td>
+                <td><%= p.name %></td>
+                <td><%= p.contact %></td>
+                <td><%= p.email %></td>
+                <td><%= p.city %></td>
+                <td><%= p.gst %></td>
+                <td class="d-flex gap-2">
+                  <a href="/party/edit/<%= p._id %>" class="btn btn-sm btn-info me-1">Edit</a>
+                  <a href="/party/delete/<%= p._id %>" onclick="return confirm('Are you sure?')" class="btn btn-sm btn-danger">Delete</a>
+                </td>
+              </tr>
+            <% }) %>
+          <% } %>
+        </tbody>
+      </table>
+
+      <!-- Pagination -->
+      <% if (totalPages > 1) { %>
+        <nav>
+          <ul class="pagination justify-content-center">
+            <% for (let i = 1; i <= totalPages; i++) { %>
+              <li class="page-item <%= currentPage === i ? 'active' : '' %>">
+                <a class="page-link" href="?page=<%= i %><%= search ? '&search=' + search : '' %>"><%= i %></a>
+              </li>
+            <% } %>
+          </ul>
+        </nav>
+      <% } %>
+    </div>
+  </div>
+</div>

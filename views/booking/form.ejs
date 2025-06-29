@@ -1,0 +1,150 @@
+<div class="d-flex justify-content-center align-items-center mt-5" style="min-height: 95vh;">
+  <div class="card w-100 shadow-sm" style="max-width: 1000px;">
+    <div class="card-body">
+      <h4 class="px-3 py-1 mb-4"
+          style="background: linear-gradient(to right, #5e2ced, #6e37ff); color: white; font-weight: bold;font-size: 1.2rem; border-radius: 4px;">
+        <%= booking ? 'Edit Booking' : 'Add Booking' %>
+      </h4>
+
+     <form action="/booking/<%= booking ? ('update/' + booking._id) : 'add' %>" method="POST" class="row g-3">
+  <div class="col-md-3">
+    <label>Booking No.</label>
+    <input type="text" name="bookingNumber" class="form-control" value="<%= bookingNumber %>" readonly>
+  </div>
+
+  <div class="col-md-3">
+    <label>Booking Date</label>
+    <input type="date" name="bookingDate" class="form-control"
+      value="<%= booking?.bookingDate ? new Date(booking.bookingDate).toISOString().substring(0,10) : new Date().toISOString().substring(0,10) %>">
+  </div>
+
+  <!-- 🔰 New Dropdown: Vehicle Type (IN/OUT) -->
+  <div class="col-md-3">
+    <label>Vehicle Type</label>
+    <select name="vehicleType" class="form-select" required>
+      <option value="">-- Select Type --</option>
+      <option value="IN" <%= booking?.vehicleType === 'IN' ? 'selected' : '' %>>IN (Owner Vehicle)</option>
+      <option value="OUT" <%= booking?.vehicleType === 'OUT' ? 'selected' : '' %>>OUT (Vendor Vehicle)</option>
+    </select>
+  </div>
+
+  <!-- Party -->
+  <div class="col-md-6">
+    <label>Party</label>
+    <select name="party" id="partySelect" class="form-select" onchange="fillPartyDetails()" required>
+      <option value="">-- Select Party --</option>
+      <% parties.forEach(p => { %>
+        <option value="<%= p._id %>" data-contact="<%= p.contact %>" data-gst="<%= p.gst %>" data-address="<%= p.address %>"
+          <%= booking?.party == p._id ? 'selected' : '' %>>
+          <%= p.name %>
+        </option>
+      <% }) %>
+    </select>
+  </div>
+
+  <!-- Contact Details -->
+  <div class="col-md-4">
+    <label>Contact No.</label>
+    <input name="contact" id="contact" class="form-control" value="<%= booking?.contact || '' %>">
+  </div>
+  <div class="col-md-4">
+    <label>GST No.</label>
+    <input name="gst" id="gst" class="form-control" value="<%= booking?.gst || '' %>">
+  </div>
+  <div class="col-md-4">
+    <label>Address</label>
+    <input name="address" id="address" class="form-control" value="<%= booking?.address || '' %>">
+  </div>
+
+  <!-- Vehicle -->
+  <div class="col-md-6">
+    <label>Vehicle</label>
+    <select name="vehicle" class="form-select" required>
+      <option value="">-- Select Vehicle --</option>
+      <% vehicles.forEach(v => { %>
+        <option value="<%= v._id %>" <%= booking?.vehicle == v._id ? 'selected' : '' %>>
+          <%= v.number %> - <%= v.type %>
+        </option>
+      <% }) %>
+    </select>
+  </div>
+
+  <!-- Other Booking Details -->
+  <div class="col-md-3">
+    <label>Consignment No.</label>
+    <input name="consignmentNo" class="form-control" value="<%= booking?.consignmentNo || '' %>">
+  </div>
+
+  <div class="col-md-6">
+    <label>From Destination</label>
+    <select name="from" class="form-select" required>
+      <option value="">-- Select From --</option>
+      <% destinations.forEach(d => { %>
+        <option value="<%= d.destinationName %>" <%= booking?.from == d.destinationName ? 'selected' : '' %>>
+          <%= d.destinationName %> - <%= d.destinationCode %>
+        </option>
+      <% }) %>
+    </select>
+  </div>
+
+  <div class="col-md-6">
+    <label>To Destination</label>
+    <select name="to" class="form-select" required>
+      <option value="">-- Select To --</option>
+      <% destinations.forEach(d => { %>
+        <option value="<%= d.destinationName %>" <%= booking?.to == d.destinationName ? 'selected' : '' %>>
+          <%= d.destinationName %> - <%= d.destinationCode %>
+        </option>
+      <% }) %>
+    </select>
+  </div>
+
+  <!-- Charges -->
+  <% const fields = [
+    'rentForParty', 'rentForOwner', 'advance', 'pending',
+    'commission', 'hamali', 'holdingCharges', 'stCharges'
+  ]; %>
+
+  <% fields.forEach(field => { %>
+    <div class="col-md-3">
+      <label><%= field.replace(/([A-Z])/g, ' $1') %></label>
+      <input name="<%= field %>" class="form-control" type="number" value="<%= booking?.[field] || '' %>">
+    </div>
+  <% }) %>
+
+  <div class="text-end mt-3">
+    <button type="submit" name="action" value="save_print" class="btn btn-success">Save & Print</button>
+  </div>
+</form>
+
+    
+
+    </div>
+  </div>
+</div>
+
+<script>
+  function fillPartyDetails() {
+    const selected = document.getElementById("partySelect").selectedOptions[0];
+    if (!selected) return;
+    document.getElementById("contact").value = selected.dataset.contact || '';
+    document.getElementById("gst").value = selected.dataset.gst || '';
+    document.getElementById("address").value = selected.dataset.address || '';
+  }
+</script>
+<script>
+  function printPDF() {
+    const id = document.querySelector('input[name="bookingId"]')?.value;
+    if (!id) {
+      alert("Please save the booking before printing.");
+      return;
+    }
+    window.open(`/booking/print/${id}`, '_blank');
+  }
+</script>
+<script>
+  setTimeout(() => {
+    const alertBox = document.querySelector('.alert-success');
+    if (alertBox) alertBox.style.display = 'none';
+  }, 3000);
+</script>

@@ -1,0 +1,103 @@
+<div class="d-flex justify-content-center align-items-center mt-5" style="min-height: 90vh;">
+  <div class="card w-100 shadow-sm" style="max-width: 1100px;">
+    <div class="card-body">
+      <h4 class="px-3 py-1 mb-4" style="background: linear-gradient(to right, #5e2ced, #6e37ff); color: white; font-weight: bold;font-size: 1.2rem; border-radius: 4px;">List of Bookings</h4>
+
+      <!-- Search & Filter -->
+      <form method="GET" class="row g-3 mb-4">
+        <div class="col-md-3">
+          <label for="search" class="form-label">Search</label>
+          <input type="text" id="search" name="search" class="form-control" placeholder="Enter party or booking no." value="<%= search || '' %>">
+        </div>
+        <div class="col-md-3">
+          <label for="fromDate" class="form-label">From Date</label>
+          <input type="date" id="fromDate" name="fromDate" class="form-control" value="<%= fromDate || '' %>">
+        </div>
+        <div class="col-md-3">
+          <label for="toDate" class="form-label">To Date</label>
+          <input type="date" id="toDate" name="toDate" class="form-control" value="<%= toDate || '' %>">
+        </div>
+        <div class="col-md-3">
+          <label for="vehicleType" class="form-label">Vehicle Type</label>
+          <select id="vehicleType" name="vehicleType" class="form-select">
+            <option value="">All</option>
+            <option value="IN" <%= vehicleType === 'IN' ? 'selected' : '' %>>IN (Owner Vehicle)</option>
+            <option value="OUT" <%= vehicleType === 'OUT' ? 'selected' : '' %>>OUT (Vendor Vehicle)</option>
+          </select>
+        </div>
+
+        <div class="col-12 d-flex justify-content-end">
+          <button type="submit" class="btn btn-secondary me-2">Search</button>
+          <a href="/booking/export/pdf?<%= `search=${search || ''}&fromDate=${fromDate || ''}&toDate=${toDate || ''}&vehicleType=${vehicleType || ''}` %>" class="btn btn-danger">Download PDF</a>
+        </div>
+      </form>
+
+      <!-- Table -->
+      <table class="table table-bordered">
+        <thead class="table-light">
+          <tr>
+            <th>#</th>
+            <th>Booking No.</th>
+            <th>Party Name</th>
+            <th>Vehicle No.</th>
+            <th>From</th>
+            <th>To</th>
+            <th>Rent</th>
+            <th>Type</th> <!-- Optional: Vehicle Type -->
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% if (bookings.length === 0) { %>
+            <tr>
+              <td colspan="9" class="text-center">No bookings found.</td>
+            </tr>
+          <% } else { %>
+            <% bookings.forEach((b, i) => { %>
+              <tr>
+                <td><%= i + 1 + ((currentPage - 1) * limit) %></td>
+                <td><%= b.bookingNumber %></td>
+                <td><%= b.party?.name || '-' %></td>
+                <td><%= b.vehicle?.number || '-' %></td>
+                <td><%= b.from %></td>
+                <td><%= b.to %></td>
+                <td>₹<%= b.rentForParty || 0 %></td>
+                <td><%= b.vehicleType || '-' %></td> <!-- Vehicle Type shown here -->
+                <td class="d-flex gap-2">
+                  <a href="/booking/edit/<%= b._id %>" class="btn btn-sm btn-info">Edit</a>
+                  <a href="/booking/delete/<%= b._id %>" onclick="return confirm('Are you sure?')" class="btn btn-sm btn-danger">Delete</a>
+                </td>
+              </tr>
+            <% }) %>
+          <% } %>
+        </tbody>
+      </table>
+
+      <!-- Pagination -->
+      <% if (totalPages > 1) { %>
+        <nav>
+          <ul class="pagination justify-content-center">
+            <% for (let i = 1; i <= totalPages; i++) { %>
+              <li class="page-item <%= currentPage === i ? 'active' : '' %>">
+                <a class="page-link" href="?page=<%= i %>&search=<%= search %>&fromDate=<%= fromDate %>&toDate=<%= toDate %>&vehicleType=<%= vehicleType %>"><%= i %></a>
+              </li>
+            <% } %>
+          </ul>
+        </nav>
+      <% } %>
+    </div>
+  </div>
+</div>
+
+<!-- Auto PDF download -->
+<% if (typeof download !== 'undefined') { %>
+<script>
+  window.onload = () => {
+    const downloadURL = "<%= download %>";
+    const link = document.createElement('a');
+    link.href = downloadURL;
+    link.download = '';
+    link.click();
+  };
+</script>
+<% } %>
